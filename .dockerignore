@@ -1,0 +1,10 @@
+.git/
+.idea/
+.vscode/
+target/
+*.sql
+*.pem
+*.jks
+*.keystore
+.env
+.env.*

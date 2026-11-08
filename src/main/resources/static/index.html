@@ -1,0 +1,3067 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackFlow | Job Application Tracker</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          rel="stylesheet">
+
+    <style>
+        body {
+            background: #f6f8fc;
+            color: #202b3c;
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+        }
+
+        .sidebar {
+            min-height: 100vh;
+            background: #17243a;
+            color: #fff;
+        }
+
+        .brand {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 750;
+        }
+
+        .sidebar-link {
+            display: block;
+            padding: 12px 14px;
+            margin-bottom: 8px;
+            border-radius: 9px;
+            color: #cbd5e1;
+            text-decoration: none;
+        }
+
+        .sidebar-link.active,
+        .sidebar-link:hover {
+            color: #fff;
+            background: #344661;
+        }
+
+        .panel {
+            background: #fff;
+            border: 1px solid #e9edf4;
+            border-radius: 14px;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 750;
+        }
+
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: #edf2ff;
+            color: #3c5ee8;
+            font-size: 1.3rem;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 30px;
+            font-size: .78rem;
+            font-weight: 650;
+        }
+
+        .applied { background: #e9efff; color: #3456c5; }
+        .assessment {background: #e8e7ff;color: #5946a8;}
+        .interview { background: #fff0d9; color: #965d00; }
+        .offered { background: #dff7e9; color: #187447; }
+        .rejected { background: #ffe5e5; color: #b52e38; }
+
+        .muted { color: #78859a; }
+
+        @media (max-width: 767px) {
+            .sidebar { min-height: auto; }
+        }
+
+
+        /* Professional table action buttons */
+        .actions-column {
+            width: 120px;
+            min-width: 120px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-buttons .btn {
+            min-width: 60px;
+            padding: 6px 10px;
+            font-size: 13px;
+            line-height: 1.4;
+            border-radius: 6px;
+        }
+
+        /* Keep actions aligned in every row */
+        #applications-table td.actions-column {
+            vertical-align: middle;
+        }
+
+        /* Stack buttons on small screens if necessary */
+        @media (max-width: 576px) {
+            .action-buttons {
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+        }
+
+
+
+        /* ==========================================
+           TRACKFLOW - PROFESSIONAL DESKTOP TABLE
+        ========================================== */
+
+        #applications-table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        /* General table alignment */
+        #applications-table th,
+        #applications-table td {
+            padding: 13px 10px;
+            vertical-align: middle;
+            text-align: left;
+        }
+
+        /* Table headings */
+        #applications-table th {
+            font-size: 12px;
+            font-weight: 750;
+            color: #344054;
+            white-space: nowrap;
+            letter-spacing: 0.02em;
+        }
+
+        /* General cell content */
+        #applications-table td {
+            font-size: 14px;
+            color: #344054;
+            overflow-wrap: break-word;
+        }
+
+        /* ==========================================
+           MY APPLICATIONS - 7 COLUMNS
+           Includes Actions column
+        ========================================== */
+
+        #applications-table:not(.hide-actions) th:nth-child(1),
+        #applications-table:not(.hide-actions) td:nth-child(1) {
+            width: 13%;
+        }
+
+        #applications-table:not(.hide-actions) th:nth-child(2),
+        #applications-table:not(.hide-actions) td:nth-child(2) {
+            width: 17%;
+        }
+
+        #applications-table:not(.hide-actions) th:nth-child(3),
+        #applications-table:not(.hide-actions) td:nth-child(3) {
+            width: 11%;
+        }
+
+        #applications-table:not(.hide-actions) th:nth-child(4),
+        #applications-table:not(.hide-actions) td:nth-child(4) {
+            width: 14%;
+            white-space: nowrap;
+        }
+
+        #applications-table:not(.hide-actions) th:nth-child(5),
+        #applications-table:not(.hide-actions) td:nth-child(5) {
+            width: 14%;
+        }
+
+        #applications-table:not(.hide-actions) th:nth-child(6),
+        #applications-table:not(.hide-actions) td:nth-child(6) {
+            width: 19%;
+        }
+
+        #applications-table:not(.hide-actions) th:nth-child(7),
+        #applications-table:not(.hide-actions) td:nth-child(7) {
+            width: 12%;
+        }
+
+        /* ==========================================
+           DASHBOARD - 6 COLUMNS
+           Actions column is hidden
+        ========================================== */
+
+        #applications-table.hide-actions {
+            table-layout: fixed;
+        }
+
+        #applications-table.hide-actions th:nth-child(1),
+        #applications-table.hide-actions td:nth-child(1) {
+            width: 14%;
+        }
+
+        #applications-table.hide-actions th:nth-child(2),
+        #applications-table.hide-actions td:nth-child(2) {
+            width: 18%;
+        }
+
+        #applications-table.hide-actions th:nth-child(3),
+        #applications-table.hide-actions td:nth-child(3) {
+            width: 12%;
+        }
+
+        #applications-table.hide-actions th:nth-child(4),
+        #applications-table.hide-actions td:nth-child(4) {
+            width: 15%;
+            white-space: nowrap;
+        }
+
+        #applications-table.hide-actions th:nth-child(5),
+        #applications-table.hide-actions td:nth-child(5) {
+            width: 15%;
+        }
+
+        #applications-table.hide-actions th:nth-child(6),
+        #applications-table.hide-actions td:nth-child(6) {
+            width: 26%;
+        }
+
+        /* ==========================================
+           JOB URL - KEEP LINK ON ONE LINE
+        ========================================== */
+
+        #applications-table td:nth-child(3) {
+            white-space: nowrap;
+            overflow-wrap: normal;
+        }
+
+        #applications-table td:nth-child(3) a {
+            display: inline-block;
+            white-space: nowrap;
+            word-break: keep-all;
+            overflow-wrap: normal;
+            color: #2563eb;
+            font-weight: 600;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        /* ==========================================
+           STATUS - CLEAN PROFESSIONAL BADGES
+        ========================================== */
+
+        #applications-table td:nth-child(5) {
+            white-space: nowrap;
+            overflow-wrap: normal;
+        }
+
+        #applications-table .status {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            max-width: 100%;
+            padding: 6px 11px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 750;
+            line-height: 1.4;
+            letter-spacing: 0.02em;
+            text-transform: none;
+            white-space: nowrap;
+            word-break: normal;
+        }
+
+        /* ==========================================
+           ACTION BUTTONS
+        ========================================== */
+
+        #applications-table .actions-column {
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        #applications-table .action-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            flex-wrap: nowrap;
+        }
+
+        #applications-table .action-buttons .btn {
+            min-width: 55px;
+            padding: 6px 9px;
+            font-size: 12px;
+            border-radius: 7px;
+        }
+
+        /* Hide actions only on Dashboard */
+        #applications-table.hide-actions .actions-column {
+            display: none;
+        }
+
+        /* Allow horizontal scrolling on smaller laptop screens */
+        @media (min-width: 768px) {
+            #applications-table {
+                min-width: 760px;
+            }
+
+            .table-responsive {
+                overflow-x: auto;
+            }
+        }
+
+
+
+        /* Interview modal responsive layout */
+        #interviewModal .modal-dialog {
+            max-height: calc(100vh - 2rem);
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        #interviewModal .modal-content {
+            max-height: calc(100vh - 2rem);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #interviewModal .modal-header,
+        #interviewModal .modal-footer {
+            flex-shrink: 0;
+            background: #fff;
+        }
+
+        #interviewModal .modal-body {
+            overflow-y: auto;
+            min-height: 0;
+        }
+
+        /* Smooth scrolling */
+        #interviewModal .modal-body {
+            scrollbar-width: thin;
+            scrollbar-color: #b8c2d1 transparent;
+        }
+
+        /* Smaller laptop screens */
+        @media (max-height: 700px) {
+            #interviewModal .modal-dialog {
+                max-height: calc(100vh - 1rem);
+                margin-top: 0.5rem;
+                margin-bottom: 0.5rem;
+            }
+
+            #interviewModal .modal-content {
+                max-height: calc(100vh - 1rem);
+            }
+
+            #interviewModal .modal-header,
+            #interviewModal .modal-footer {
+                padding: 0.6rem 1rem;
+            }
+
+            #interviewModal .modal-body {
+                padding: 1rem;
+            }
+        }
+
+
+        /* Interview modal: fixed height with independently scrollable form */
+
+        #interviewModal .modal-dialog {
+            height: calc(100vh - 2rem);
+            max-height: calc(100vh - 2rem);
+        }
+
+        #interviewModal .modal-content {
+            height: 100%;
+            max-height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* The form must also be a flex container */
+        #interviewModal #interview-form {
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        /* Keep header and footer visible */
+        #interviewModal .modal-header,
+        #interviewModal .modal-footer {
+            flex: 0 0 auto;
+            background: #fff;
+        }
+
+        /* Only the form body scrolls */
+        #interviewModal .modal-body {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            scrollbar-width: thin;
+            scrollbar-color: #b8c2d1 transparent;
+        }
+
+        /* Laptop and smaller screens */
+        @media (max-width: 767px) {
+            #interviewModal .modal-dialog {
+                height: calc(100vh - 1rem);
+                max-height: calc(100vh - 1rem);
+                margin: 0.5rem;
+            }
+
+            #interviewModal .modal-header,
+            #interviewModal .modal-footer {
+                padding: 0.75rem;
+            }
+
+            #interviewModal .modal-body {
+                padding: 1rem;
+            }
+        }
+
+
+        /* =====================================================
+           MOBILE APP LAYOUT - TrackFlow
+           Desktop styles above remain unchanged.
+        ====================================================== */
+
+        .mobile-menu-button,
+        .mobile-menu-backdrop {
+            display: none;
+        }
+
+        @media (max-width: 767.98px) {
+            body {
+                background: #f5f7fb;
+                overflow-x: hidden;
+            }
+
+            .container-fluid {
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .container-fluid > .row {
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            /* Sidebar becomes a slide-in navigation drawer */
+            .sidebar {
+                position: fixed;
+                z-index: 1055;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                width: min(82vw, 310px);
+                min-height: 100dvh;
+                padding: 26px 20px !important;
+                overflow-y: auto;
+                transform: translateX(-105%);
+                transition: transform .25s ease;
+                box-shadow: 18px 0 40px rgba(15, 23, 42, .18);
+            }
+
+            body.mobile-menu-open .sidebar {
+                transform: translateX(0);
+            }
+
+            .mobile-menu-backdrop {
+                display: block;
+                position: fixed;
+                inset: 0;
+                z-index: 1050;
+                background: rgba(15, 23, 42, .48);
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity .2s ease, visibility .2s ease;
+            }
+
+            body.mobile-menu-open .mobile-menu-backdrop {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .sidebar .brand {
+                font-size: 1.35rem;
+                margin-bottom: 2.25rem !important;
+            }
+
+            .sidebar-link {
+                padding: 14px 15px;
+                margin-bottom: 9px;
+                font-size: 1rem;
+            }
+
+            .sidebar #logout-button {
+                margin-top: 28px !important;
+            }
+
+            main.col-md-9 {
+                width: 100%;
+                max-width: 100%;
+                padding: 16px !important;
+                min-height: 100dvh;
+            }
+
+            /* Compact app bar with hamburger */
+            main > header {
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                align-items: center !important;
+                gap: 12px !important;
+                margin: 0 -16px 22px !important;
+                padding: 12px 16px 16px;
+                background: #fff;
+                border-bottom: 1px solid #e9edf4;
+            }
+
+            .mobile-menu-button {
+                display: inline-flex;
+                flex: 0 0 44px;
+                width: 44px;
+                height: 44px;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid #e6eaf1;
+                border-radius: 13px;
+                background: #f8faff;
+                color: #17243a;
+                font-size: 1.35rem;
+            }
+
+            main > header > div {
+                min-width: 0;
+                flex: 1;
+            }
+
+            main > header #page-title {
+                font-size: 1.2rem;
+                margin: 0 !important;
+            }
+
+            main > header > div > p:first-child,
+            main > header > div > p:last-child {
+                display: none;
+            }
+
+            #add-application-button {
+                flex: 0 0 auto;
+                padding: 9px 11px !important;
+                font-size: .82rem;
+                white-space: nowrap;
+            }
+
+            .panel {
+                border-radius: 16px;
+                box-shadow: 0 4px 16px rgba(20, 35, 60, .045);
+            }
+
+            #dashboard-view .row.g-3,
+            #interviews-view .row.g-3 {
+                --bs-gutter-x: .7rem;
+                --bs-gutter-y: .7rem;
+            }
+
+            .stat-number {
+                font-size: 1.45rem;
+            }
+
+            .stat-icon {
+                width: 38px;
+                height: 38px;
+                font-size: 1.1rem;
+            }
+
+            /* Applications heading and controls */
+            #applications {
+                padding: 16px !important;
+            }
+
+            #applications > div:first-child {
+                align-items: flex-start !important;
+                margin-bottom: 18px !important;
+            }
+
+            #applications-section-title {
+                font-size: 1.05rem;
+            }
+
+            #applications > div:first-child > div:last-child {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr;
+                width: 100%;
+                gap: 9px !important;
+            }
+
+            #search {
+                grid-column: 1 / -1;
+                width: 100%;
+                max-width: none !important;
+                min-height: 45px;
+                border-radius: 11px;
+            }
+
+            #status-filter,
+            #sort-filter {
+                width: 100%;
+                max-width: none !important;
+                min-height: 43px;
+                border-radius: 11px;
+                font-size: .84rem;
+            }
+
+            /* Convert application table rows into app-like cards */
+            .table-responsive {
+                overflow: visible !important;
+                border: 0;
+            }
+
+            #applications-table,
+            #applications-table tbody {
+                display: block;
+                width: 100% !important;
+                min-width: 0 !important;
+            }
+
+            #applications-table thead {
+                display: none;
+            }
+
+            #applications-table tbody tr {
+                display: block;
+                width: 100%;
+                margin: 0 0 13px;
+                padding: 13px 14px;
+                border: 1px solid #e8edf5;
+                border-radius: 14px;
+                background: #fff;
+                box-shadow: 0 3px 12px rgba(20, 35, 60, .035);
+            }
+
+            #applications-table tbody td {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 14px;
+                width: 100% !important;
+                padding: 7px 0;
+                border: 0;
+                text-align: right;
+                font-size: .84rem;
+                overflow-wrap: anywhere;
+            }
+
+            #applications-table tbody td[colspan] {
+                display: block;
+                text-align: center;
+                padding: 18px 8px;
+            }
+
+            #applications-table tbody td[colspan]::before {
+                display: none;
+                content: none;
+            }
+
+            #applications-table tbody td::before {
+                content: attr(data-label);
+                flex: 0 0 94px;
+                color: #7b8798;
+                font-size: .72rem;
+                font-weight: 700;
+                letter-spacing: .035em;
+                text-align: left;
+                text-transform: uppercase;
+            }
+
+            #applications-table tbody td:first-child {
+                color: #17243a;
+                font-size: .98rem;
+                font-weight: 750;
+                padding-top: 2px;
+            }
+
+            #applications-table tbody td:first-child::before {
+                content: "COMPANY";
+            }
+
+            #applications-table tbody td:nth-child(2) {
+                color: #34445c;
+                font-weight: 600;
+            }
+
+            #applications-table tbody td.actions-column {
+                justify-content: flex-end;
+                padding-top: 11px;
+                margin-top: 5px;
+                border-top: 1px solid #edf0f5;
+            }
+
+            #applications-table tbody td.actions-column::before {
+                content: "";
+                display: none;
+            }
+
+            .action-buttons {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+                gap: 8px;
+            }
+
+            .action-buttons .btn {
+                min-height: 36px;
+                padding: 6px 12px;
+                border-radius: 9px;
+            }
+
+            /* Dashboard recent applications: hide actions as before */
+            #applications-table.hide-actions tbody td.actions-column {
+                display: none !important;
+            }
+
+            /* Interview section */
+            #interviews-view > .d-flex {
+                align-items: flex-start !important;
+            }
+
+            #interviews-view > .d-flex h2 {
+                font-size: 1.2rem;
+            }
+
+            #add-interview-button {
+                width: 100%;
+                min-height: 44px;
+                border-radius: 11px;
+            }
+
+            #interviews-view section.panel {
+                padding: 16px !important;
+            }
+
+            #interviews-list > div {
+                border-color: #e7ecf4 !important;
+                border-radius: 14px !important;
+                padding: 14px !important;
+                box-shadow: 0 3px 12px rgba(20, 35, 60, .04);
+            }
+
+            #interviews-list .row.g-3 {
+                row-gap: 12px !important;
+            }
+
+            #interviews-list .d-flex {
+                gap: 10px;
+            }
+
+            #interviews-view .panel .h3 {
+                font-size: 1.5rem;
+            }
+
+            footer {
+                padding: 8px 2px 20px;
+            }
+
+            /* Modal fills the available mobile screen neatly */
+            .modal-dialog {
+                margin: 10px;
+            }
+
+            .modal-content {
+                border: 0;
+                border-radius: 16px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            main.col-md-9 {
+                padding: 12px !important;
+            }
+
+            main > header {
+                margin-left: -12px !important;
+                margin-right: -12px !important;
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+
+            #applications > div:first-child > div:last-child {
+                grid-template-columns: 1fr;
+            }
+
+            #search {
+                grid-column: auto;
+            }
+
+            #add-application-button {
+                font-size: .75rem;
+                padding: 8px !important;
+            }
+        }
+
+
+        /* =========================================
+           TRACKFLOW - PROFESSIONAL MOBILE APPLICATION CARDS
+        ========================================= */
+
+        @media (max-width: 767.98px) {
+
+            /* Application card */
+            #applications-table tbody tr {
+                display: block;
+                padding: 14px 16px;
+                margin-bottom: 14px;
+                background: #ffffff;
+                border: 1px solid #e5eaf2;
+                border-radius: 16px;
+                box-shadow: 0 4px 14px rgba(20, 35, 60, 0.045);
+            }
+
+            /* Individual information rows */
+            #applications-table tbody td {
+                display: grid;
+                grid-template-columns: 88px minmax(0, 1fr);
+                align-items: start;
+                gap: 10px;
+                width: 100% !important;
+                padding: 9px 0;
+                border: 0;
+                text-align: left;
+                font-size: 0.88rem;
+                line-height: 1.45;
+                color: #273449;
+                overflow-wrap: anywhere;
+            }
+
+            /* Field labels */
+            #applications-table tbody td::before {
+                content: attr(data-label);
+                display: block;
+                color: #8490a2;
+                font-size: 0.69rem;
+                font-weight: 750;
+                letter-spacing: 0.045em;
+                text-align: left;
+                text-transform: uppercase;
+                line-height: 1.5;
+            }
+
+            /* Company name */
+            #applications-table tbody td:first-child {
+                color: #17243a;
+                font-size: 1rem;
+                font-weight: 750;
+                padding-top: 2px;
+            }
+
+            /* Job title */
+            #applications-table tbody td:nth-child(2) {
+                color: #34445c;
+                font-weight: 600;
+            }
+
+            /* Job URL */
+            #applications-table tbody td[data-label="Job URL"] a {
+                color: #2563eb;
+                font-weight: 600;
+                text-decoration: none;
+            }
+
+            /* Applied date */
+            #applications-table tbody td[data-label="Applied"] {
+                color: #475569;
+                font-weight: 500;
+            }
+
+            /* Status badge */
+            #applications-table .status {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: fit-content;
+                padding: 5px 11px;
+                border-radius: 30px;
+                font-size: 0.73rem;
+                font-weight: 750;
+                line-height: 1.4;
+                white-space: nowrap;
+            }
+
+            /* Notes */
+            #applications-table tbody td[data-label="Notes"] {
+                color: #596579;
+                font-size: 0.83rem;
+                line-height: 1.55;
+            }
+
+            /* Actions */
+            #applications-table tbody td.actions-column {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                padding-top: 12px;
+                margin-top: 5px;
+                border-top: 1px solid #edf0f5;
+            }
+
+            #applications-table tbody td.actions-column::before {
+                display: none;
+            }
+
+            #applications-table .action-buttons {
+                display: flex;
+                gap: 8px;
+            }
+
+            /* Loading and empty states */
+            #applications-table tbody td[colspan] {
+                display: block;
+                text-align: center;
+                padding: 18px 10px;
+            }
+
+            #applications-table tbody td[colspan]::before {
+                display: none;
+            }
+
+            /* Dashboard recent applications */
+            #applications-table.hide-actions tbody td.actions-column {
+                display: none !important;
+            }
+        }
+
+
+        /* =========================================
+           TRACKFLOW - MOBILE INTERVIEW MODAL FIX
+        ========================================= */
+
+        @media (max-width: 767.98px) {
+
+            /* Fit the modal inside the visible mobile screen */
+            #interviewModal .modal-dialog {
+                width: calc(100% - 16px);
+                max-width: none;
+                height: calc(100vh - 16px);
+                height: calc(100dvh - 16px);
+                max-height: calc(100vh - 16px);
+                max-height: calc(100dvh - 16px);
+                margin: 8px auto;
+                display: flex;
+                align-items: stretch;
+            }
+
+            /* Modal container */
+            #interviewModal .modal-content {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                height: 100%;
+                max-height: 100%;
+                min-height: 0;
+                border: 0;
+                border-radius: 16px;
+                overflow: hidden;
+            }
+
+            /* Form must occupy available modal height */
+            #interviewModal #interview-form {
+                display: flex;
+                flex-direction: column;
+                flex: 1 1 auto;
+                height: 100%;
+                min-height: 0;
+                overflow: hidden;
+            }
+
+            /* Header remains visible */
+            #interviewModal .modal-header {
+                flex: 0 0 auto;
+                padding: 16px;
+                background: #ffffff;
+                border-bottom: 1px solid #e9edf3;
+            }
+
+            /* Only the form content scrolls */
+            #interviewModal .modal-body {
+                flex: 1 1 auto;
+                min-height: 0;
+                overflow-y: auto;
+                overflow-x: hidden;
+                padding: 16px;
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior: contain;
+            }
+
+            /* Footer always remains visible */
+            #interviewModal .modal-footer {
+                position: relative;
+                z-index: 2;
+                display: flex;
+                flex: 0 0 auto;
+                justify-content: flex-end;
+                align-items: center;
+                flex-wrap: nowrap;
+                gap: 10px;
+                padding: 12px 16px;
+                background: #ffffff;
+                border-top: 1px solid #e9edf3;
+            }
+
+            /* Footer buttons */
+            #interviewModal .modal-footer .btn {
+                min-height: 44px;
+                padding: 10px 18px;
+                border-radius: 10px;
+                font-size: 0.9rem;
+            }
+
+            #interviewModal #save-interview {
+                min-width: 130px;
+            }
+
+            #interviewModal .modal-footer .btn-outline-secondary {
+                min-width: 95px;
+            }
+        }
+
+
+
+    </style>
+</head>
+
+<body>
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="mobile-menu-backdrop"
+             id="mobile-menu-backdrop"
+             aria-hidden="true"></div>
+
+        <!-- Sidebar -->
+        <aside class="col-md-3 col-lg-2 sidebar p-4">
+            <div class="brand mb-5">
+                <i class="bi bi-kanban-fill me-2"></i>TrackFlow
+            </div>
+
+            <p class="text-uppercase small text-secondary">Workspace</p>
+
+
+            <a href="#" class="sidebar-link active" data-view="dashboard">
+                <i class="bi bi-grid me-2"></i>Dashboard
+            </a>
+
+            <a href="#" class="sidebar-link" data-view="applications">
+                <i class="bi bi-briefcase me-2"></i>My Applications
+            </a>
+
+            <a href="#" class="sidebar-link" data-view="interviews">
+                <i class="bi bi-calendar-event me-2"></i>Interviews
+            </a>
+            <button type="button"
+                    id="logout-button"
+                    class="btn btn-outline-light w-100 mt-4">
+                <i class="bi bi-box-arrow-right me-2"></i>
+                Logout
+            </button>
+
+            <div class="mt-5 small text-secondary">
+                YOUR CAREER, ORGANIZED.
+            </div>
+        </aside>
+
+        <!-- Main dashboard -->
+        <main class="col-md-9 col-lg-10 p-3 p-lg-5">
+
+            <header class="d-flex flex-wrap justify-content-between
+                          align-items-center gap-3 mb-5">
+                <button type="button"
+                        class="mobile-menu-button"
+                        id="mobile-menu-button"
+                        aria-label="Open navigation menu"
+                        aria-expanded="false">
+                    <i class="bi bi-list"></i>
+                </button>
+
+                <div>
+                    <p class="muted mb-1">WORKSPACE / OVERVIEW</p>
+                    <h1 class="h3 fw-bold mb-1" id="page-title">Dashboard</h1>
+                    <p class="muted mb-0">
+                        Keep your job search moving forward.
+                    </p>
+                </div>
+
+                <button id="add-application-button"
+                        class="btn btn-primary px-4 d-none"
+                        data-bs-toggle="modal"
+                        data-bs-target="#applicationModal">
+                    <i class="bi bi-plus-lg me-2"></i>Add application
+                </button>
+
+            </header>
+
+            <div id="dashboard-view" class="page-view">
+            <!-- Backend status -->
+            <div class="panel p-3 mb-4 d-flex align-items-center gap-2">
+                <span id="api-indicator"
+                      class="rounded-circle bg-secondary"
+                      style="width:10px;height:10px"></span>
+                <span id="api-status" class="small">
+                    Checking backend connection...
+                </span>
+            </div>
+
+            <!-- Statistics -->
+            <section class="row g-3 mb-4">
+                <div class="col-6 col-xl-3">
+                    <div class="panel p-3 p-lg-4 h-100">
+                        <div class="stat-icon mb-3">
+                            <i class="bi bi-send"></i>
+                        </div>
+                        <p class="muted mb-1">Applications</p>
+                        <div class="stat-number" id="total-applications">0</div>
+                        <small class="muted">Total tracked</small>
+                    </div>
+                </div>
+
+                <div class="col-6 col-xl-3">
+                    <div class="panel p-3 p-lg-4 h-100">
+                        <div class="stat-icon mb-3"
+                             style="background:#fff0d9;color:#a56b08">
+                            <i class="bi bi-calendar-check"></i>
+                        </div>
+                        <p class="muted mb-1">Interviews</p>
+                        <div class="stat-number" id="total-interviews">0</div>
+                        <small class="muted">In progress</small>
+                    </div>
+                </div>
+
+                <div class="col-6 col-xl-3">
+                    <div class="panel p-3 p-lg-4 h-100">
+                        <div class="stat-icon mb-3"
+                             style="background:#dff7e9;color:#187447">
+                            <i class="bi bi-trophy"></i>
+                        </div>
+                        <p class="muted mb-1">Offers</p>
+                        <div class="stat-number" id="total-offers">0</div>
+                        <small class="muted">Received</small>
+                    </div>
+                </div>
+
+                <div class="col-6 col-xl-3">
+                    <div class="panel p-3 p-lg-4 h-100">
+                        <div class="stat-icon mb-3"
+                             style="background:#f0e8ff;color:#7847b5">
+                            <i class="bi bi-graph-up-arrow"></i>
+                        </div>
+                        <p class="muted mb-1">Response rate</p>
+                        <div class="stat-number" id="response-rate">0%</div>
+                        <small class="muted">Statistic</small>
+                    </div>
+                </div>
+            </section>
+            </div>
+
+            <!-- Applications table -->
+            <div id="applications-view" class="page-view">
+                <section class="panel p-3 p-lg-4" id="applications">
+                <div class="d-flex flex-wrap justify-content-between
+                            align-items-center gap-3 mb-4">
+                    <div>
+                        <h2 class="h5 fw-bold mb-1" id="applications-section-title">
+                            Recent applications
+                        </h2>
+                        <p class="muted small mb-0">
+                            Track and manage your job search
+                        </p>
+                    </div>
+
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <input type="search"
+                               id="search"
+                               class="form-control"
+                               style="max-width:250px"
+                               placeholder="Search applications..."
+                               aria-label="Search applications">
+
+                        <select id="status-filter"
+                                class="form-select"
+                                style="max-width:200px"
+                                aria-label="Filter by status">
+                            <option value="">All statuses</option>
+                            <option value="APPLIED">Applied</option>
+                            <option value="ASSESSMENT">Assessment</option>
+                            <option value="INTERVIEW">Interview</option>
+                            <option value="OFFER">Offer</option>
+                            <option value="REJECTED">Rejected</option>
+                        </select>
+
+
+                        <select id="sort-filter" class="form-select"
+                                style="max-width:200px"
+                                aria-label="Sort applications">
+                            <option value="newest">Newest first</option>
+                            <option value="oldest">Oldest first</option>
+                            <option value="company">Company A–Z</option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="table-responsive">
+                    <table id="applications-table" class="table align-middle hide-actions">
+                        <thead>
+                        <tr class="muted small">
+                            <th>COMPANY</th>
+                            <th>JOB TITLE</th>
+                            <th>JOB URL</th>
+                            <th>DATE APPLIED</th>
+                            <th>STATUS</th>
+                            <th>NOTES</th>
+                            <th class="actions-column">ACTIONS</th>
+                        </tr>
+                        </thead>
+                        <tbody id="applications-body">
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="muted small mb-0">
+                    Your job applications, synced with the database.
+                </p>
+            </section>
+            </div>
+
+
+
+            <!-- Interviews view -->
+            <div id="interviews-view" class="page-view d-none">
+
+                <!-- Page heading -->
+                <div class="d-flex justify-content-between align-items-center
+                flex-wrap gap-3 mb-4">
+                    <div>
+                        <h2 class="h4 fw-bold mb-1">My Interviews</h2>
+                        <p class="muted mb-0">
+                            Keep track of company interview invitations and details.
+                        </p>
+                    </div>
+
+
+                    <button class="btn btn-primary"
+                            id="add-interview-button"
+                            type="button"
+                            data-bs-toggle="modal"
+                            data-bs-target="#interviewModal">
+
+                        <i class="bi bi-plus-lg me-2"></i>
+                        Add interview details
+
+                    </button>
+
+                </div>
+
+                <!-- Interview summary cards -->
+                <div class="row g-3 mb-4">
+
+                    <div class="col-12 col-md-4">
+                        <div class="panel p-3 h-100">
+                            <div class="d-flex justify-content-between
+                            align-items-center">
+                                <div>
+                                    <p class="muted small mb-1">Upcoming interviews</p>
+                                    <h3 class="h3 fw-bold mb-0"
+                                        id="upcoming-interviews-count">0</h3>
+                                </div>
+                                <div class="rounded-3 p-3 bg-primary-subtle
+                                text-primary">
+                                    <i class="bi bi-calendar-event fs-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <div class="panel p-3 h-100">
+                            <div class="d-flex justify-content-between
+                            align-items-center">
+                                <div>
+                                    <p class="muted small mb-1">Completed</p>
+                                    <h3 class="h3 fw-bold mb-0"
+                                        id="completed-interviews-count">0</h3>
+                                </div>
+                                <div class="rounded-3 p-3 bg-success-subtle
+                                text-success">
+                                    <i class="bi bi-check-circle fs-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <div class="panel p-3 h-100">
+                            <div class="d-flex justify-content-between
+                            align-items-center">
+                                <div>
+                                    <p class="muted small mb-1">Total interviews</p>
+                                    <h3 class="h3 fw-bold mb-0"
+                                        id="total-interviews-count">0</h3>
+                                </div>
+                                <div class="rounded-3 p-3 bg-info-subtle text-info">
+                                    <i class="bi bi-briefcase fs-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Interview list -->
+                <section class="panel p-3 p-lg-4">
+
+                    <div class="d-flex justify-content-between
+                    align-items-center flex-wrap gap-2 mb-4">
+                        <div>
+                            <h3 class="h5 fw-bold mb-1">Interview schedule</h3>
+                            <p class="muted small mb-0">
+                                Dates, timings, meeting details and preparation.
+                            </p>
+                        </div>
+
+                        <span class="badge rounded-pill text-bg-light">
+                My interview records
+            </span>
+                    </div>
+
+                    <!-- Interview records will be rendered here -->
+                    <div id="interviews-list"></div>
+
+                    <!-- Empty state -->
+                    <div class="text-center py-5" id="interviews-empty-state">
+                        <div class="rounded-circle bg-primary-subtle text-primary
+                        d-inline-flex align-items-center justify-content-center
+                        mb-3"
+                             style="width: 72px; height: 72px;">
+                            <i class="bi bi-calendar2-week fs-2"></i>
+                        </div>
+
+                        <h4 class="h6 fw-bold">No interview details yet</h4>
+
+                        <p class="muted mx-auto mb-3"
+                           style="max-width: 420px;">
+                            When a company invites you for an interview, add the
+                            details here to keep the date, time, meeting link and
+                            preparation notes in one place.
+                        </p>
+
+                        <button class="btn btn-outline-primary"
+                                type="button"
+                                onclick="document.getElementById(
+                        'add-interview-button'
+                    ).click()">
+                            <i class="bi bi-plus-lg me-2"></i>
+                            Add your first interview
+                        </button>
+                    </div>
+
+                </section>
+
+            </div>
+
+
+            <footer class="muted small mt-4">
+                TrackFlow · Organize your next opportunity.
+            </footer>
+        </main>
+    </div>
+</div>
+
+
+<div class="modal fade" id="applicationModal" tabindex="-1"
+     aria-labelledby="applicationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <form id="application-form" novalidate>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="applicationModalLabel">
+                        Add Job Application
+                    </h5>
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            <label for="company" class="form-label">Company *</label>
+                            <input id="company" name="company"
+                                   class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="jobTitle" class="form-label">Job Title *</label>
+                            <input id="jobTitle" name="jobTitle"
+                                   class="form-control" required>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="jobUrl" class="form-label">Job URL</label>
+                            <input id="jobUrl" name="jobUrl" type="url"
+                                   class="form-control"
+                                   placeholder="https://example.com/job">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="appliedDate" class="form-label">Date Applied *</label>
+                            <input id="appliedDate" name="appliedDate"
+                                   type="date" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="status" class="form-label">Status *</label>
+                            <select id="status" name="status"
+                                    class="form-select" required>
+                                <option value="APPLIED">Applied</option>
+                                <option value="ASSESSMENT">Assessment</option>
+                                <option value="INTERVIEW">Interview</option>
+                                <option value="OFFER">Offer</option>
+                                <option value="REJECTED">Rejected</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="notes" class="form-label">Notes</label>
+                            <textarea id="notes" name="notes"
+                                      class="form-control" rows="3"
+                                      placeholder="Add any useful details..."></textarea>
+                        </div>
+
+                    </div>
+                    <p id="form-error" class="text-danger mt-3 mb-0"
+                       role="alert"></p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" id="save-application"
+                            class="btn btn-primary">Save application</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Add / Edit Interview Modal -->
+<div class="modal fade" id="interviewModal" tabindex="-1"
+     aria-labelledby="interviewModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <form id="interview-form" novalidate>
+
+                <div class="modal-header">
+                    <div>
+                        <h5 class="modal-title fw-bold" id="interviewModalLabel">
+                            Add Interview Details
+                        </h5>
+                        <small class="muted">
+                            Record the interview invitation received from a company.
+                        </small>
+                    </div>
+
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row g-3">
+
+                        <!-- Company -->
+                        <div class="col-md-6">
+                            <label for="interview-company" class="form-label">
+                                Company Name *
+                            </label>
+                            <input type="text" id="interview-company"
+                                   class="form-control" required>
+                        </div>
+
+                        <!-- Job Title -->
+                        <div class="col-md-6">
+                            <label for="interview-job-title" class="form-label">
+                                Job Title *
+                            </label>
+                            <input type="text" id="interview-job-title"
+                                   class="form-control" required>
+                        </div>
+
+                        <!-- Interview Round -->
+                        <div class="col-md-6">
+                            <label for="interview-round" class="form-label">
+                                Interview Round *
+                            </label>
+                            <select id="interview-round" class="form-select" required>
+                                <option value="">Select round</option>
+                                <option value="HR Round">HR Round</option>
+                                <option value="Technical Round 1">Technical Round 1</option>
+                                <option value="Technical Round 2">Technical Round 2</option>
+                                <option value="Coding Round">Coding Round</option>
+                                <option value="Managerial Round">Managerial Round</option>
+                                <option value="Final Round">Final Round</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Interview Date -->
+                        <div class="col-md-6">
+                            <label for="interview-date" class="form-label">
+                                Interview Date *
+                            </label>
+                            <input type="date"
+                                   id="interview-date"
+                                   class="form-control"
+                                   required>
+                        </div>
+
+                        <!-- Interview Time -->
+                        <div class="col-md-6">
+                            <label for="interview-time" class="form-label">
+                                Interview Time *
+                            </label>
+                            <input type="time"
+                                   id="interview-time"
+                                   class="form-control"
+                                   required>
+                        </div>
+
+                        <!-- Interview Mode -->
+                        <div class="col-md-6">
+                            <label for="interview-mode" class="form-label">
+                                Interview Mode *
+                            </label>
+                            <select id="interview-mode"
+                                    class="form-select" required>
+                                <option value="">Select mode</option>
+                                <option value="ONLINE">Online</option>
+                                <option value="IN_PERSON">In Person</option>
+                                <option value="PHONE">Phone</option>
+                            </select>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="col-md-6">
+                            <label for="interview-status" class="form-label">
+                                Interview Status *
+                            </label>
+                            <select id="interview-status"
+                                    class="form-select" required>
+                                <option value="UPCOMING">Upcoming</option>
+                                <option value="COMPLETED">Completed</option>
+                                <option value="CANCELLED">Cancelled</option>
+                                <option value="RESCHEDULED">Rescheduled</option>
+                            </select>
+                        </div>
+
+                        <!-- Meeting Link -->
+                        <div class="col-12">
+                            <label for="interview-meeting-link"
+                                   class="form-label">
+                                Meeting Link
+                            </label>
+                            <input type="url" id="interview-meeting-link"
+                                   class="form-control"
+                                   placeholder="https://meet.google.com/...">
+                        </div>
+
+                        <!-- Location -->
+                        <div class="col-12">
+                            <label for="interview-location"
+                                   class="form-label">
+                                Interview Location
+                            </label>
+                            <input type="text" id="interview-location"
+                                   class="form-control"
+                                   placeholder="Office address or interview venue">
+                        </div>
+
+                        <!-- Recruiter Name -->
+                        <div class="col-md-6">
+                            <label for="interview-recruiter-name"
+                                   class="form-label">
+                                Recruiter Name
+                            </label>
+                            <input type="text" id="interview-recruiter-name"
+                                   class="form-control">
+                        </div>
+
+                        <!-- Recruiter Contact -->
+                        <div class="col-md-6">
+                            <label for="interview-recruiter-contact"
+                                   class="form-label">
+                                Recruiter Contact
+                            </label>
+                            <input type="text" id="interview-recruiter-contact"
+                                   class="form-control"
+                                   placeholder="Email or phone number">
+                        </div>
+
+                        <!-- Preparation Notes -->
+                        <div class="col-12">
+                            <label for="interview-preparation-notes"
+                                   class="form-label">
+                                Preparation Notes
+                            </label>
+                            <textarea id="interview-preparation-notes"
+                                      class="form-control" rows="3"
+                                      placeholder="Topics to prepare, instructions, important details..."></textarea>
+                        </div>
+
+                    </div>
+
+                    <p id="interview-form-error"
+                       class="text-danger mt-3 mb-0"
+                       role="alert"></p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <button type="submit"
+                            id="save-interview"
+                            class="btn btn-primary">
+                        Save Interview
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Toast notification container -->
+<div class="toast-container position-fixed top-0 end-0 p-3"
+     style="z-index: 1100;">
+
+    <div id="app-toast"
+         class="toast align-items-center border-0"
+         role="alert"
+         aria-live="assertive"
+         aria-atomic="true">
+
+        <div class="d-flex">
+            <div id="toast-message" class="toast-body">
+                Notification message
+            </div>
+
+            <button type="button"
+                    class="btn-close me-2 m-auto"
+                    data-bs-dismiss="toast"
+                    aria-label="Close">
+            </button>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Bootstrap JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- TrackFlow application JavaScript -->
+<script>
+
+    // ======================================
+    // CSRF HELPER FOR API REQUESTS
+    // ======================================
+
+    function getCookie(name) {
+        const cookie = document.cookie
+            .split("; ")
+            .find(row => row.startsWith(name + "="));
+
+        return cookie
+            ? decodeURIComponent(cookie.split("=")[1])
+            : null;
+    }
+
+    async function apiFetch(url, options = {}) {
+
+        const method = (options.method || "GET").toUpperCase();
+        const headers = new Headers(options.headers || {});
+
+        const safeMethods = ["GET", "HEAD", "OPTIONS", "TRACE"];
+
+        if (!safeMethods.includes(method)) {
+
+            const csrfToken = getCookie("XSRF-TOKEN");
+
+            if (!csrfToken) {
+                throw new Error("CSRF token not found. Please refresh the page.");
+            }
+
+            headers.set("X-XSRF-TOKEN", csrfToken);
+        }
+
+        return fetch(url, {
+            ...options,
+            headers,
+            credentials: "same-origin"
+        });
+    }
+
+
+    // ======================================
+    // TRACKFLOW LOGOUT
+    // ======================================
+
+    async function logoutUser() {
+
+        const confirmed = confirm("Are you sure you want to logout?");
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            // Get a fresh CSRF token
+            const csrfResponse = await fetch("/api/auth/csrf", {
+                credentials: "same-origin"
+            });
+
+            if (!csrfResponse.ok) {
+                throw new Error("Could not initialize security token.");
+            }
+
+            const csrfToken = getCookie("XSRF-TOKEN");
+
+            if (!csrfToken) {
+                throw new Error("CSRF token not found.");
+            }
+
+            // Send logout request
+            const response = await fetch("/api/auth/logout", {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    "X-XSRF-TOKEN": csrfToken
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error("Logout failed. Please try again.");
+            }
+
+            // Return to login page
+            window.location.replace("/login.html");
+
+        } catch (error) {
+            console.error("Logout error:", error);
+            alert(error.message);
+        }
+    }
+
+    // Connect logout button
+    document.getElementById("logout-button")
+        ?.addEventListener("click", logoutUser);
+
+
+    // Check Spring Boot health
+    fetch("/api/health")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Backend returned an error");
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById("api-status").textContent =
+                data.application + " backend: " + data.status;
+
+            document.getElementById("api-indicator").className =
+                "rounded-circle bg-success";
+        })
+        .catch(() => {
+            document.getElementById("api-status").textContent =
+                "Backend connection failed. Check the server.";
+
+            document.getElementById("api-indicator").className =
+                "rounded-circle bg-danger";
+        });
+
+
+    // Safely display text returned by the API
+    function escapeHtml(value) {
+        return String(value ?? "").replace(/[&<>"']/g, char => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        })[char]);
+    }
+
+
+    function showToast(message, type = "success") {
+        const toastElement = document.getElementById("app-toast");
+        const toastMessage = document.getElementById("toast-message");
+
+        toastMessage.textContent = message;
+
+        // Reset the previous notification color
+        toastElement.classList.remove(
+            "text-bg-success",
+            "text-bg-danger",
+            "text-bg-warning"
+        );
+
+        // Apply the color based on notification type
+        const toastClasses = {
+            success: "text-bg-success",
+            error: "text-bg-danger",
+            warning: "text-bg-warning"
+        };
+
+        toastElement.classList.add(
+            toastClasses[type] || "text-bg-success"
+        );
+
+        const toast = bootstrap.Toast.getOrCreateInstance(
+            toastElement,
+            { delay: 3000 }
+        );
+
+        toast.show();
+    }
+
+    // Show validation errors below the related input field
+    function showFieldError(fieldId, message) {
+        const field = document.getElementById(fieldId);
+
+        if (!field) return false;
+
+        field.classList.add("is-invalid");
+
+        let feedback = field.nextElementSibling;
+
+        if (!feedback || !feedback.classList.contains("invalid-feedback")) {
+            feedback = document.createElement("div");
+            feedback.className = "invalid-feedback";
+            field.insertAdjacentElement("afterend", feedback);
+        }
+
+        feedback.textContent = message;
+
+        return false;
+    }
+
+    // Remove validation error from a field
+    function clearFieldError(field) {
+        field.classList.remove("is-invalid");
+
+        const feedback = field.nextElementSibling;
+
+        if (feedback && feedback.classList.contains("invalid-feedback")) {
+            feedback.remove();
+        }
+    }
+
+    // Clear all validation errors inside a form
+    function clearFormFieldErrors(form) {
+        form.querySelectorAll(".is-invalid").forEach(clearFieldError);
+    }
+
+    // Automatically clear errors when the user edits a field
+    document.querySelectorAll(
+        "#application-form input, #application-form select, " +
+        "#interview-form input, #interview-form select, " +
+        "#interview-form textarea"
+    ).forEach(field => {
+        field.addEventListener("input", () => clearFieldError(field));
+        field.addEventListener("change", () => clearFieldError(field));
+    });
+
+
+    let applicationsCache = [];
+    let editingApplicationId = null;
+
+    function updateDashboardStats(applications) {
+        const total = applications.length;
+
+        const interviews = applications.filter(app =>
+            app.status === "INTERVIEW"
+        ).length;
+
+        const offers = applications.filter(app =>
+            app.status === "OFFER"
+        ).length;
+
+        const respondedStatuses = [
+            "ASSESSMENT",
+            "INTERVIEW",
+            "OFFER",
+            "REJECTED"
+        ];
+
+        const responded = applications.filter(app =>
+            respondedStatuses.includes(app.status)
+        ).length;
+
+        const responseRate = total === 0
+            ? 0
+            : Math.round((responded / total) * 100);
+
+        document.getElementById("total-applications").textContent = total;
+        document.getElementById("total-interviews").textContent = interviews;
+        document.getElementById("total-offers").textContent = offers;
+        document.getElementById("response-rate").textContent = responseRate + "%";
+    }
+    // Load applications from the Spring Boot API
+
+    async function loadApplications() {
+        const tableBody = document.getElementById("applications-body");
+
+        tableBody.innerHTML =
+            '<tr><td colspan="7">Loading applications...</td></tr>';
+
+        try {
+            const response = await fetch("/api/applications");
+
+            if (!response.ok) {
+                throw new Error("Failed to load applications");
+            }
+
+            const applications = await response.json();
+
+            applicationsCache = applications;
+
+            updateDashboardStats(applications);
+
+            if (applications.length === 0) {
+                tableBody.innerHTML =
+                    '<tr><td colspan="7">No applications found. Add your first one!</td></tr>';
+                return;
+            }
+
+
+            const sortOrder = document.getElementById("sort-filter").value;
+
+            const sortedApplications = [...applications].sort((a, b) => {
+                if (sortOrder === "newest") {
+                    return new Date(b.appliedDate) - new Date(a.appliedDate);
+                }
+
+                if (sortOrder === "oldest") {
+                    return new Date(a.appliedDate) - new Date(b.appliedDate);
+                }
+
+                if (sortOrder === "company") {
+                    return a.company.localeCompare(b.company);
+                }
+
+                return 0;
+            });
+
+            tableBody.innerHTML = sortedApplications.map(app => `
+            <tr>
+                <td data-label="Company">${escapeHtml(app.company)}</td>
+
+                <td data-label="Job title">${escapeHtml(app.jobTitle)}</td>
+
+                <td data-label="Job URL">
+                    ${
+                app.jobUrl
+                    ? `<a href="${escapeHtml(app.jobUrl)}"
+                                  target="_blank"
+                                  rel="noopener noreferrer">View Job</a>`
+                    : "—"
+            }
+                </td>
+
+                <td data-label="Applied">${escapeHtml(app.appliedDate)}</td>
+
+
+<td data-label="Status">
+    <span class="status ${({
+                APPLIED: "applied",
+                ASSESSMENT: "assessment",
+                INTERVIEW: "interview",
+                OFFER: "offered",
+                REJECTED: "rejected"
+            })[app.status] || "applied"}">${escapeHtml(
+                app.status.charAt(0) + app.status.slice(1).toLowerCase()
+            )}</span>
+</td>
+
+
+                <td data-label="Notes">${escapeHtml(app.notes || "—")}</td>
+
+
+<td class="actions-column" data-label="Actions">
+    <div class="action-buttons">
+        <button type="button"
+                class="btn btn-outline-primary btn-sm"
+                onclick="editApplication(${app.id})">
+            Edit
+        </button>
+        <button type="button"
+                class="btn btn-outline-danger btn-sm"
+                onclick="deleteApplication(${app.id})">
+            Delete
+        </button>
+    </div>
+</td>
+
+            </tr>
+        `).join("");
+
+        } catch (error) {
+            console.error(error);
+
+            tableBody.innerHTML =
+                '<tr><td colspan="7">Could not load applications. Check the backend.</td></tr>';
+        }
+    }
+
+
+
+    // Search and filter applications
+    const searchInput = document.getElementById("search");
+    const statusFilter = document.getElementById("status-filter");
+    const sortFilter = document.getElementById("sort-filter");
+
+
+    function filterApplications() {
+        const query = searchInput.value.toLowerCase().trim();
+        const selectedStatus = statusFilter.value;
+
+        document.querySelectorAll("#applications-body tr").forEach(row => {
+            const cells = row.querySelectorAll("td");
+
+            // Leave loading and empty-state messages visible
+            if (cells.length < 7) {
+                return;
+            }
+
+            const rowText = row.textContent.toLowerCase();
+            const rowStatus = cells[4].textContent.trim();
+
+            const matchesSearch = rowText.includes(query);
+            const matchesStatus =
+                selectedStatus === "" || rowStatus === selectedStatus;
+
+            row.hidden = !(matchesSearch && matchesStatus);
+        });
+    }
+
+    searchInput.addEventListener("input", filterApplications);
+    statusFilter.addEventListener("change", filterApplications);
+    sortFilter.addEventListener("change", loadApplications);
+
+    // Handle form submission
+    const applicationForm = document.getElementById("application-form");
+
+    applicationForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const saveButton = document.getElementById("save-application");
+        const errorMessage = document.getElementById("form-error");
+
+        const application = {
+            company: document.getElementById("company").value.trim(),
+            jobTitle: document.getElementById("jobTitle").value.trim(),
+            jobUrl: document.getElementById("jobUrl").value.trim(),
+            appliedDate: document.getElementById("appliedDate").value,
+            status: document.getElementById("status").value,
+            notes: document.getElementById("notes").value.trim()
+        };
+
+
+        // Validation patterns
+        // Clear previous validation errors
+        clearFormFieldErrors(applicationForm);
+        errorMessage.textContent = "";
+
+// Validation patterns
+        const companyPattern = /^(?=.*\p{L})[\p{L}\p{N}\s&.,'()\/+#-]+$/u;
+        const jobTitlePattern = /^(?=.*\p{L})[\p{L}\p{N}\s&.,'()\/+#-]+$/u;
+
+// Required field validation
+        if (!application.company) {
+            document.getElementById("company").focus();
+            showFieldError("company", "Company name is required.");
+            return;
+        }
+
+        if (!application.jobTitle) {
+            document.getElementById("jobTitle").focus();
+            showFieldError("jobTitle", "Job title is required.");
+            return;
+        }
+
+        if (!application.appliedDate) {
+            document.getElementById("appliedDate").focus();
+            showFieldError("appliedDate", "Please select the date applied.");
+            return;
+        }
+
+        if (!application.status) {
+            document.getElementById("status").focus();
+            showFieldError("status", "Please select an application status.");
+            return;
+        }
+
+// Company name validation
+        if (!companyPattern.test(application.company)) {
+            document.getElementById("company").focus();
+            showFieldError(
+                "company",
+                "Company name contains invalid characters."
+            );
+            return;
+        }
+
+// Job title validation
+        if (!jobTitlePattern.test(application.jobTitle)) {
+            document.getElementById("jobTitle").focus();
+            showFieldError(
+                "jobTitle",
+                "Job title contains invalid characters."
+            );
+            return;
+        }
+        saveButton.disabled = true;
+        saveButton.textContent = "Saving...";
+
+        try {
+            const isEditing = editingApplicationId !== null;
+
+            const url = isEditing
+                ? `/api/applications/${editingApplicationId}`
+                : "/api/applications";
+
+            const response = await 	apiFetch(url, {
+                method: isEditing ? "PUT" : "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(application)
+            });
+
+            if (!response.ok) {
+                throw new Error("Could not save application.");
+            }
+
+            applicationForm.reset();
+            clearFormFieldErrors(applicationForm);
+            editingApplicationId = null;
+
+            document.getElementById("applicationModalLabel").textContent =
+                "Add Job Application";
+
+            saveButton.textContent = "Save application";
+
+            const modalElement = document.getElementById("applicationModal");
+            bootstrap.Modal.getOrCreateInstance(modalElement).hide();
+
+            await loadApplications();
+
+            showToast(
+                isEditing
+                    ? "Application updated successfully!"
+                    : "Application saved successfully!",
+                "success"
+            );
+
+        } catch (error) {
+            console.error(error);
+
+            const errorText =
+                error.message || "Something went wrong. Please try again.";
+
+            errorMessage.textContent = errorText;
+            showToast(errorText, "error");
+        } finally {
+            saveButton.disabled = false;
+            saveButton.textContent = "Save application";
+        }
+    });
+
+    // Reset the form when Add Application is clicked
+    document.getElementById("add-application-button")
+        .addEventListener("click", function () {
+            editingApplicationId = null;
+            applicationForm.reset();
+
+            document.getElementById("applicationModalLabel").textContent =
+                "Add Job Application";
+
+            document.getElementById("save-application").textContent =
+                "Save application";
+
+            document.getElementById("form-error").textContent = "";
+        });
+
+    function editApplication(id) {
+        const application = applicationsCache.find(app => app.id === id);
+
+        if (!application) {
+            alert("Application not found. Please refresh and try again.");
+            return;
+        }
+
+        editingApplicationId = id;
+        clearFormFieldErrors(applicationForm);
+
+        document.getElementById("company").value = application.company || "";
+        document.getElementById("jobTitle").value = application.jobTitle || "";
+        document.getElementById("jobUrl").value = application.jobUrl || "";
+        document.getElementById("appliedDate").value = application.appliedDate || "";
+        document.getElementById("status").value = application.status || "APPLIED";
+        document.getElementById("notes").value = application.notes || "";
+
+        document.getElementById("applicationModalLabel").textContent =
+            "Edit Job Application";
+
+        document.getElementById("save-application").textContent =
+            "Update application";
+
+        document.getElementById("form-error").textContent = "";
+
+        const modalElement = document.getElementById("applicationModal");
+        bootstrap.Modal.getOrCreateInstance(modalElement).show();
+    }
+
+    async function deleteApplication(id) {
+        const application = applicationsCache.find(app => app.id === id);
+
+        if (!application) {
+            alert("Application not found. Please refresh and try again.");
+            return;
+        }
+
+        const confirmed = confirm(
+            `Are you sure you want to delete the application for ${application.company}?`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            const response = await apiFetch(`/api/applications/${id}`, {
+                method: "DELETE"
+            });
+
+            if (!response.ok) {
+                throw new Error("Could not delete application.");
+            }
+
+            await loadApplications();
+
+            showToast("Application deleted successfully!", "success");
+
+        } catch (error) {
+            console.error(error);
+
+            showToast(
+                error.message || "Something went wrong while deleting.",
+                "error"
+            );
+        }
+    }
+
+
+
+    // ======================================
+    // INTERVIEW MANAGEMENT
+    // ======================================
+
+    let interviewsCache = [];
+    let editingInterviewId = null;
+
+
+    // Load interviews from database
+    async function loadInterviews() {
+        const interviewsList = document.getElementById("interviews-list");
+        const emptyState = document.getElementById("interviews-empty-state");
+
+        interviewsList.innerHTML =
+            '<p class="muted text-center py-3">Loading interviews...</p>';
+
+        try {
+            const response = await fetch("/api/interviews");
+
+            if (!response.ok) {
+                throw new Error("Failed to load interviews.");
+            }
+
+            const interviews = await response.json();
+
+            interviewsCache = interviews;
+
+            updateInterviewStats(interviews);
+
+            if (interviews.length === 0) {
+                interviewsList.innerHTML = "";
+                emptyState.classList.remove("d-none");
+                return;
+            }
+
+            emptyState.classList.add("d-none");
+
+            renderInterviews(interviews);
+
+        } catch (error) {
+            console.error(error);
+
+            interviewsList.innerHTML =
+                '<p class="text-danger text-center py-3">Could not load interviews. Please check your backend.</p>';
+
+            showToast(error.message, "error");
+        }
+    }
+
+
+    // Update interview summary cards
+    function updateInterviewStats(interviews) {
+
+        const upcoming = interviews.filter(interview =>
+            ["UPCOMING", "RESCHEDULED"].includes(interview.status)
+        ).length;
+
+        const completed = interviews.filter(interview =>
+            interview.status === "COMPLETED"
+        ).length;
+
+        document.getElementById("upcoming-interviews-count").textContent =
+            upcoming;
+
+        document.getElementById("completed-interviews-count").textContent =
+            completed;
+
+        document.getElementById("total-interviews-count").textContent =
+            interviews.length;
+    }
+
+
+    // Render interview records
+    function renderInterviews(interviews) {
+
+        const interviewsList = document.getElementById("interviews-list");
+
+        interviewsList.innerHTML = interviews.map(interview => {
+
+            const statusColors = {
+                UPCOMING: "primary",
+                COMPLETED: "success",
+                CANCELLED: "danger",
+                RESCHEDULED: "warning"
+            };
+
+            const statusColor =
+                statusColors[interview.status] || "secondary";
+
+            const scheduledDate = interview.scheduledAt
+                ? new Date(interview.scheduledAt).toLocaleString("en-IN", {
+                    dateStyle: "medium",
+                    timeStyle: "short"
+                })
+                : "Not specified";
+
+            const meetingLink = interview.meetingLink
+                ? (() => {
+                    try {
+                        const url = new URL(interview.meetingLink);
+
+                        if (!["http:", "https:"].includes(url.protocol)) {
+                            return "";
+                        }
+
+                        return `<a href="${escapeHtml(url.href)}"
+                               target="_blank"
+                               rel="noopener noreferrer">
+                               Join meeting
+                            </a>`;
+                    } catch {
+                        return "";
+                    }
+                })()
+                : "";
+
+            return `
+            <div class="border rounded-3 p-3 mb-3">
+
+                <div class="d-flex justify-content-between
+                            align-items-start flex-wrap gap-3">
+
+                    <div>
+                        <h5 class="fw-bold mb-1">
+                            ${escapeHtml(interview.company)}
+                        </h5>
+
+                        <p class="mb-1">
+                            ${escapeHtml(interview.jobTitle)}
+                        </p>
+
+                        <span class="badge text-bg-light">
+                            ${escapeHtml(interview.interviewRound)}
+                        </span>
+                    </div>
+
+                    <span class="badge text-bg-${statusColor}">
+                        ${escapeHtml(interview.status)}
+                    </span>
+
+                </div>
+
+                <hr>
+
+                <div class="row g-3 small">
+
+                    <div class="col-md-6">
+                        <i class="bi bi-calendar-event me-2"></i>
+                        <strong>Date:</strong>
+                        ${escapeHtml(scheduledDate)}
+                    </div>
+
+                    <div class="col-md-6">
+                        <i class="bi bi-camera-video me-2"></i>
+                        <strong>Mode:</strong>
+                        ${escapeHtml(interview.interviewMode)}
+                    </div>
+
+                    <div class="col-md-6">
+                        <i class="bi bi-person me-2"></i>
+                        <strong>Recruiter:</strong>
+                        ${escapeHtml(interview.recruiterName || "—")}
+                    </div>
+
+                    <div class="col-md-6">
+                        <i class="bi bi-telephone me-2"></i>
+                        <strong>Contact:</strong>
+                        ${escapeHtml(interview.recruiterContact || "—")}
+                    </div>
+
+                    ${interview.location ? `
+                        <div class="col-12">
+                            <i class="bi bi-geo-alt me-2"></i>
+                            <strong>Location:</strong>
+                            ${escapeHtml(interview.location)}
+                        </div>
+                    ` : ""}
+
+                    ${meetingLink ? `
+                        <div class="col-12">
+                            <i class="bi bi-link-45deg me-2"></i>
+                            ${meetingLink}
+                        </div>
+                    ` : ""}
+
+                    ${interview.preparationNotes ? `
+                        <div class="col-12">
+                            <strong>Preparation Notes:</strong>
+                            <p class="muted mb-0 mt-1">
+                                ${escapeHtml(interview.preparationNotes)}
+                            </p>
+                        </div>
+                    ` : ""}
+
+                </div>
+
+                <hr>
+
+                <div class="d-flex justify-content-end gap-2">
+
+                    <button type="button"
+                            class="btn btn-outline-primary btn-sm"
+                            onclick="editInterview(${Number(interview.id)})">
+                        <i class="bi bi-pencil me-1"></i>
+                        Edit
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-outline-danger btn-sm"
+                            onclick="deleteInterview(${Number(interview.id)})">
+                        <i class="bi bi-trash me-1"></i>
+                        Delete
+                    </button>
+
+                </div>
+
+            </div>
+        `;
+
+        }).join("");
+    }
+
+
+    function validateInterviewForm(interview) {
+
+        const companyPattern = /^(?=.*\p{L})[\p{L}\p{N}\s&.,'()\/+#-]+$/u;
+        const jobTitlePattern = /^(?=.*\p{L})[\p{L}\p{N}\s&.,'()\/+#-]+$/u;
+        const namePattern = /^[\p{L}\s.'-]+$/u;
+        const locationPattern = /^[\p{L}\p{N}\s.,#\/'()&-]+$/u;
+
+        const contact = interview.recruiterContact;
+
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phonePattern = /^\+?[\d\s()-]{7,20}$/;
+
+        const interviewDate = document.getElementById("interview-date").value;
+        const interviewTime = document.getElementById("interview-time").value;
+
+        const showError = (message, fieldId) => {
+            document.getElementById(fieldId).focus();
+            return showFieldError(fieldId, message);
+        };
+
+        // Clear previous validation errors
+        clearFormFieldErrors(document.getElementById("interview-form"));
+
+        document.getElementById("interview-form-error").textContent = "";
+
+        // Required field validation
+        if (!interview.company) {
+            return showError("Company name is required.", "interview-company");
+        }
+
+        if (!interview.jobTitle) {
+            return showError("Job title is required.", "interview-job-title");
+        }
+
+        if (!interview.interviewRound) {
+            return showError("Please select an interview round.", "interview-round");
+        }
+
+        if (!interviewDate) {
+            return showError("Please select the interview date.", "interview-date");
+        }
+
+        if (!interviewTime) {
+            return showError("Please select the interview time.", "interview-time");
+        }
+
+        if (!interview.interviewMode) {
+            return showError("Please select the interview mode.", "interview-mode");
+        }
+
+        if (!interview.status) {
+            return showError("Please select the interview status.", "interview-status");
+        }
+
+        // Company validation
+        if (!companyPattern.test(interview.company)) {
+            return showError(
+                "Company name contains invalid characters.",
+                "interview-company"
+            );
+        }
+
+        // Job title validation
+        if (!jobTitlePattern.test(interview.jobTitle)) {
+            return showError(
+                "Job title contains invalid characters.",
+                "interview-job-title"
+            );
+        }
+
+        // Recruiter name validation
+        if (interview.recruiterName &&
+            !namePattern.test(interview.recruiterName)) {
+
+            return showError(
+                "Recruiter name should contain only letters, spaces, hyphens, apostrophes or dots.",
+                "interview-recruiter-name"
+            );
+        }
+
+        // Recruiter contact validation
+        if (contact) {
+
+            const isEmail = emailPattern.test(contact);
+
+            const isPhone =
+                phonePattern.test(contact) &&
+                contact.replace(/\D/g, "").length >= 7 &&
+                contact.replace(/\D/g, "").length <= 15;
+
+            if (!isEmail && !isPhone) {
+                return showError(
+                    "Enter a valid email address or phone number.",
+                    "interview-recruiter-contact"
+                );
+            }
+        }
+
+        // Meeting URL validation
+        if (interview.meetingLink) {
+            try {
+                const url = new URL(interview.meetingLink);
+
+                if (!["http:", "https:"].includes(url.protocol)) {
+                    throw new Error("Invalid URL protocol");
+                }
+
+            } catch {
+                return showError(
+                    "Enter a valid meeting URL starting with https:// or http://.",
+                    "interview-meeting-link"
+                );
+            }
+        }
+
+        // Location validation
+        if (interview.location &&
+            !locationPattern.test(interview.location)) {
+
+            return showError(
+                "Location contains invalid characters.",
+                "interview-location"
+            );
+        }
+
+        // Date validation
+        if (!interview.scheduledAt ||
+            Number.isNaN(new Date(interview.scheduledAt).getTime())) {
+
+            return showError(
+                "Please enter a valid interview date and time.",
+                "interview-date"
+            );
+        }
+
+        return true;
+    }
+
+
+    // Handle Add / Edit Interview form
+    const interviewForm = document.getElementById("interview-form");
+
+    interviewForm.addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        const saveButton = document.getElementById("save-interview");
+        const errorMessage = document.getElementById("interview-form-error");
+
+        const interviewDate =
+            document.getElementById("interview-date").value;
+
+        const interviewTime =
+            document.getElementById("interview-time").value;
+
+        const scheduledAtValue =
+            interviewDate && interviewTime
+                ? `${interviewDate}T${interviewTime}`
+                : "";
+
+        const interview = {
+            company: document.getElementById("interview-company").value.trim(),
+            jobTitle: document.getElementById("interview-job-title").value.trim(),
+            interviewRound: document.getElementById("interview-round").value,
+            scheduledAt: scheduledAtValue
+                ? scheduledAtValue + (scheduledAtValue.length === 16 ? ":00" : "")
+                : "",
+            interviewMode: document.getElementById("interview-mode").value,
+            meetingLink: document.getElementById("interview-meeting-link").value.trim(),
+            location: document.getElementById("interview-location").value.trim(),
+            recruiterName: document.getElementById("interview-recruiter-name").value.trim(),
+            recruiterContact: document.getElementById("interview-recruiter-contact").value.trim(),
+            preparationNotes: document.getElementById("interview-preparation-notes").value.trim(),
+            status: document.getElementById("interview-status").value
+        };
+
+
+        if (!validateInterviewForm(interview)) {
+            return;
+        }
+
+        errorMessage.textContent = "";
+
+        saveButton.disabled = true;
+        saveButton.textContent = "Saving...";
+
+        try {
+
+            const isEditing = editingInterviewId !== null;
+
+            const url = isEditing
+                ? `/api/interviews/${editingInterviewId}`
+                : "/api/interviews";
+
+            const response = await 	apiFetch(url, {
+                method: isEditing ? "PUT" : "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(interview)
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+
+                throw new Error(errorText || "Could not save interview.");
+            }
+
+            // Close and reset the form
+            interviewForm.reset();
+            clearFormFieldErrors(interviewForm);
+            editingInterviewId = null;
+
+            document.getElementById("interviewModalLabel").textContent =
+                "Add Interview Details";
+
+            saveButton.textContent = "Save Interview";
+
+            bootstrap.Modal.getOrCreateInstance(
+                document.getElementById("interviewModal")
+            ).hide();
+
+            await loadInterviews();
+
+            showToast(
+                isEditing
+                    ? "Interview updated successfully!"
+                    : "Interview saved successfully!",
+                "success"
+            );
+
+        } catch (error) {
+
+            console.error(error);
+
+            errorMessage.textContent = error.message;
+
+            showToast(error.message, "error");
+
+        } finally {
+
+            saveButton.disabled = false;
+
+            saveButton.textContent = editingInterviewId !== null
+                ? "Update Interview"
+                : "Save Interview";
+        }
+
+    });
+
+
+    // Reset form when Add Interview button is clicked
+    document.getElementById("add-interview-button")
+        .addEventListener("click", function() {
+
+            editingInterviewId = null;
+
+            interviewForm.reset();
+
+            document.getElementById("interviewModalLabel").textContent =
+                "Add Interview Details";
+
+            document.getElementById("save-interview").textContent =
+                "Save Interview";
+
+            document.getElementById("interview-form-error").textContent = "";
+        });
+
+
+    // Edit interview
+    function editInterview(id) {
+
+        const interview = interviewsCache.find(item =>
+            String(item.id) === String(id)
+        );
+
+        if (!interview) {
+            showToast("Interview record not found.", "error");
+            return;
+        }
+
+        editingInterviewId = id;
+        clearFormFieldErrors(interviewForm);
+
+        document.getElementById("interview-company").value =
+            interview.company || "";
+
+        document.getElementById("interview-job-title").value =
+            interview.jobTitle || "";
+
+        document.getElementById("interview-round").value =
+            interview.interviewRound || "";
+
+        const scheduledDateTime = interview.scheduledAt
+            ? String(interview.scheduledAt).substring(0, 16)
+            : "";
+
+        const [savedDate, savedTime] = scheduledDateTime.split("T");
+
+        document.getElementById("interview-date").value =
+            savedDate || "";
+
+        document.getElementById("interview-time").value =
+            savedTime || "";
+
+        document.getElementById("interview-mode").value =
+            interview.interviewMode || "";
+
+        document.getElementById("interview-status").value =
+            interview.status || "UPCOMING";
+
+        document.getElementById("interview-meeting-link").value =
+            interview.meetingLink || "";
+
+        document.getElementById("interview-location").value =
+            interview.location || "";
+
+        document.getElementById("interview-recruiter-name").value =
+            interview.recruiterName || "";
+
+        document.getElementById("interview-recruiter-contact").value =
+            interview.recruiterContact || "";
+
+        document.getElementById("interview-preparation-notes").value =
+            interview.preparationNotes || "";
+
+        document.getElementById("interviewModalLabel").textContent =
+            "Edit Interview Details";
+
+        document.getElementById("save-interview").textContent =
+            "Update Interview";
+
+        document.getElementById("interview-form-error").textContent = "";
+
+        bootstrap.Modal.getOrCreateInstance(
+            document.getElementById("interviewModal")
+        ).show();
+    }
+
+
+    // Delete interview
+    async function deleteInterview(id) {
+
+        const interview = interviewsCache.find(item =>
+            String(item.id) === String(id)
+        );
+
+        if (!interview) {
+            showToast("Interview record not found.", "error");
+            return;
+        }
+
+        const confirmed = confirm(
+            `Are you sure you want to delete the interview with ${interview.company}?`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+
+            const response = await apiFetch(`/api/interviews/${id}`, {
+                method: "DELETE"
+            });
+
+            if (!response.ok) {
+                throw new Error("Could not delete interview.");
+            }
+
+            await loadInterviews();
+
+            showToast("Interview deleted successfully!", "success");
+
+        } catch (error) {
+
+            console.error(error);
+
+            showToast(error.message, "error");
+        }
+    }
+
+    // Mobile navigation drawer
+    const mobileMenuButton = document.getElementById("mobile-menu-button");
+    const mobileMenuBackdrop = document.getElementById("mobile-menu-backdrop");
+
+    function closeMobileMenu() {
+        document.body.classList.remove("mobile-menu-open");
+
+        mobileMenuButton?.setAttribute("aria-expanded", "false");
+        mobileMenuButton?.setAttribute("aria-label", "Open navigation menu");
+
+        if (mobileMenuButton) {
+            mobileMenuButton.innerHTML = '<i class="bi bi-list"></i>';
+        }
+    }
+
+    function toggleMobileMenu() {
+        const isOpen = document.body.classList.toggle("mobile-menu-open");
+
+        mobileMenuButton?.setAttribute("aria-expanded", String(isOpen));
+
+        mobileMenuButton?.setAttribute(
+            "aria-label",
+            isOpen ? "Close navigation menu" : "Open navigation menu"
+        );
+
+        if (mobileMenuButton) {
+            mobileMenuButton.innerHTML = isOpen
+                ? '<i class="bi bi-x-lg"></i>'
+                : '<i class="bi bi-list"></i>';
+        }
+    }
+
+    mobileMenuButton?.addEventListener("click", toggleMobileMenu);
+    mobileMenuBackdrop?.addEventListener("click", closeMobileMenu);
+
+    const pageTitles = {
+        dashboard: "Dashboard",
+        applications: "My Applications",
+        interviews: "Interviews"
+    };
+
+    document.querySelectorAll(".sidebar-link[data-view]")
+        .forEach(link => {
+            link.addEventListener("click", event => {
+                event.preventDefault();
+
+                const selectedView = link.dataset.view;
+
+                closeMobileMenu();
+
+                // Hide all views first.
+                document.querySelectorAll(".page-view")
+                    .forEach(view => {
+                        view.classList.add("d-none");
+                    });
+
+                // Dashboard shows statistics AND recent applications.
+                if (selectedView === "dashboard") {
+                    document.getElementById("dashboard-view")
+                        ?.classList.remove("d-none");
+
+                    document.getElementById("applications-view")
+                        ?.classList.remove("d-none");
+                } else {
+                    const targetView = document.getElementById(
+                        selectedView + "-view"
+                    );
+
+                    if (targetView) {
+                        targetView.classList.remove("d-none");
+                    }
+                }
+
+                // Update active sidebar link.
+                document.querySelectorAll(".sidebar-link")
+                    .forEach(item => {
+                        item.classList.remove("active");
+                    });
+
+                link.classList.add("active");
+
+                // Update page title.
+                document.getElementById("page-title").textContent =
+                    pageTitles[selectedView] || "Dashboard";
+
+// Update applications section heading
+                document.getElementById("applications-section-title").textContent =
+                    selectedView === "applications"
+                        ? "My Applications"
+                        : "Recent applications";
+
+// Show Add Application only in My Applications
+                const addButton = document.getElementById(
+                    "add-application-button"
+                );
+
+                addButton.classList.toggle(
+                    "d-none",
+                    selectedView !== "applications"
+                );
+
+                addButton.classList.toggle(
+                    "d-none",
+                    selectedView !== "applications"
+                );
+
+// Show Edit and Delete only in My Applications
+                const applicationsTable = document.getElementById(
+                    "applications-table"
+                );
+
+                applicationsTable.classList.toggle(
+                    "hide-actions",
+                    selectedView !== "applications"
+                );
+            });
+        });
+
+
+
+
+    // Load data when the page is ready
+    document.addEventListener("DOMContentLoaded", async function() {
+
+        try {
+            // Generate and receive the CSRF cookie first.
+            const response = await fetch("/api/auth/csrf", {
+                credentials: "same-origin"
+            });
+
+            if (!response.ok) {
+                throw new Error("Could not initialize security token.");
+            }
+
+            // Now load the user's data.
+            await loadApplications();
+            await loadInterviews();
+
+        } catch (error) {
+            console.error("Initialization error:", error);
+            showToast(error.message, "error");
+        }
+    });
+
+</script>
+</body>
+</html>
