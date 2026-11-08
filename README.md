@@ -197,19 +197,19 @@ http://localhost:8080
 Screenshots of the TrackFlow application will be added here.
 
 ### Login Page
-![TrackFlow Login](Screenshots\loginPage.png)
+![TrackFlow Login](Screenshots/loginPage.png)
 
 ### Registration Page
-![TrackFlow Login](Screenshots\RegistrationPage.png)
+![TrackFlow Login](Screenshots/RegistrationPage.png)
 
 ### Dashboard
-![TrackFlow Dashboard](Screenshots\DashboardPage.png)
+![TrackFlow Dashboard](Screenshots/DashboardPage.png)
 
 ### Job Applications
-![TrackFlow Applications](Screenshots\MyApplicationPage.png)
+![TrackFlow Applications](Screenshots/MyApplicationPage.png)
 
 ### Interview Management
-![TrackFlow Interviews](Screenshots\InterviewPage.png)
+![TrackFlow Interviews](Screenshots/InterviewPage.png)
 
 ## 🔮 Future Improvements
 
